@@ -1,0 +1,25 @@
+services:
+  registry:
+    image: registry:latest
+    container_name: docker-registry
+    restart: unless-stopped
+    ports:
+      - "5000:5000"  # Direct HTTPS access on port 443
+    environment:
+      # Use config file instead of environment variables for complex settings
+      REGISTRY_CONFIGURATION_PATH: "/etc/docker/registry/config.yml"
+      
+    volumes:
+      - /opt/docker-registry-data:/var/lib/registry
+      - ./certs:/certs:ro
+      - ./config.yml:/etc/docker/registry/config.yml:ro
+    networks:
+      - registry-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+networks:
+  registry-network:
+    driver: bridge

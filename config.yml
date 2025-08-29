@@ -1,0 +1,36 @@
+version: 0.1
+log:
+  level: info
+  formatter: text
+  fields:
+    service: registry
+
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    enabled: true
+  cache:
+    blobdescriptor: inmemory
+
+http:
+  addr: :5000
+  
+  # Extended timeouts for large uploads (2 hours)
+  readtimeout: 7200s
+  writetimeout: 7200s
+  idletimeout: 7200s
+  
+  # Headers for CORS and security
+  headers:
+    X-Content-Type-Options: [nosniff]
+    Access-Control-Allow-Origin: ['*']
+    Access-Control-Allow-Methods: [HEAD,GET,OPTIONS,DELETE,PUT,POST]
+    Access-Control-Allow-Headers: [Authorization,Accept,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With]
+
+# Health check endpoint
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
